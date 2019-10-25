@@ -18,7 +18,7 @@ class AnalyticsMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (!$request->session()->has('last_activity_date') ||
-            $request->session()->get('last_activity_date') != $d = date('Y-m-d'))
+            $request->session()->get('last_activity_date') != date('Y-m-d'))
         {
                 $request->session()->put('last_activity_date', date('Y-m-d'));
                 $request->session()->save();
