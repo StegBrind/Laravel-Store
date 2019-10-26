@@ -6,6 +6,7 @@ namespace App\Http\Sections;
 use AdminDisplay;
 use AdminColumn;
 use AdminColumnFilter;
+use Illuminate\Database\Eloquent\Builder;
 use SleepingOwl\Admin\Contracts\Display\DisplayInterface;
 use SleepingOwl\Admin\Contracts\Initializable;
 use SleepingOwl\Admin\Display\DisplayTabbed;
@@ -31,7 +32,7 @@ class AdminNotificationTabs extends Section implements Initializable
      */
     public function getIcon()
     {
-        return 'glyphicon glyphicon-envelope';
+        return 'far fa-envelope';
     }
 
     /**
@@ -57,7 +58,7 @@ class AdminNotificationTabs extends Section implements Initializable
                 AdminColumn::text('id', 'id'),
                 AdminColumn::text('subject', 'Тема'),
                 AdminColumn::text('content_message', 'Текст Сообщения'),
-                AdminColumn::boolean('done', 'Разослано')->setWidth('5px'),
+                AdminColumn::boolean('done', 'Разослано'),
                 AdminColumn::datetime('created_at', 'Дата Отправки')
             ]
         )->

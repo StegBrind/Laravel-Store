@@ -39,7 +39,7 @@ class Users extends Section implements Initializable
     /**
      * @var string
      */
-    protected $title = 'Пользователи сайта';
+    protected $title = 'Пользователи';
 
     /**
      * @var string
@@ -51,7 +51,7 @@ class Users extends Section implements Initializable
      */
     public function getIcon()
     {
-        return 'fa fa-group';
+        return 'fas fa-users';
     }
 
     /**
@@ -62,7 +62,7 @@ class Users extends Section implements Initializable
     {
         $display = AdminDisplay::
         datatables()->
-        setHtmlAttribute('class', 'table table-condensed table-hover')->
+        setHtmlAttribute('class', 'table-bordered')->
         setColumns
         (
             [

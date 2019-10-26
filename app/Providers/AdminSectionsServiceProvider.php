@@ -70,13 +70,13 @@ class AdminSectionsServiceProvider extends ServiceProvider
             [
                 [
                     'title' => 'Главная',
-                    'icon' => 'fa fa-dashboard',
+                    'icon' => 'fas fa-home',
                     'priority' => 1,
                     'url'   => route('admin.dashboard')
                 ],
                 [
                     'title' => 'Выйти',
-                    'icon' => 'glyphicon glyphicon-log-out',
+                    'icon' => 'fas fa-sign-out-alt',
                     'priority' => 10,
                     'url'   => route('admin.quit')
                 ]

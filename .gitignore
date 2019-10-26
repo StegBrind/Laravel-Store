@@ -4,6 +4,7 @@
 /storage/framework/*
 /storage/logs/*
 /storage/*.txt
+/bootstrap/cache/*
 /vendor
 /.idea
 .env

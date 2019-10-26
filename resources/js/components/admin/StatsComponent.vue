@@ -1,19 +1,20 @@
 <template>
-    <div class="panel panel-default" style="margin-top: 30px">
-        <div class="panel-heading">Статистика</div>
-        <div id="panel-chart" class="panel-body">
-            <h3>Посещаемость</h3>
-            <line-chart :chart-data="data" :height="100" :options="{responsive: true}"></line-chart>
-        </div>
-        <div class="form-inline" style="text-align: center">
-            С даты:
-            <datepicker :disabled-dates="disabledDates" :value="date_from" @selected="updateDateValue($event, 'from')"
-                        :bootstrap-styling="true" format="yyyy-MM-dd"
-                        wrapper-class="form-group"></datepicker>
-            По дату:
-            <datepicker :disabled-dates="disabledDates" :value="date_to" @selected="updateDateValue($event, 'to')"
-                        :bootstrap-styling="true" format="yyyy-MM-dd"
-                        wrapper-class="form-group"></datepicker>
+    <div class="card" style="margin-top: 30px">
+        <div class="card-header">Статистика</div>
+            <hr>
+            <div class="card-body" id="panel-chart">
+                <h5>Посещаемость</h5>
+                <line-chart :chart-data="data" :height="100" :options="{responsive: true}"></line-chart>
+                <div class="form-inline" style="text-align: center">
+                    С даты:
+                    <datepicker :disabled-dates="disabledDates" :value="date_from" @selected="updateDateValue($event, 'from')"
+                                :bootstrap-styling="true" format="yyyy-MM-dd"
+                                wrapper-class="form-group"></datepicker>
+                    По дату:
+                    <datepicker :disabled-dates="disabledDates" :value="date_to" @selected="updateDateValue($event, 'to')"
+                                :bootstrap-styling="true" format="yyyy-MM-dd"
+                                wrapper-class="form-group"></datepicker>
+            </div>
         </div>
     </div>
 </template>

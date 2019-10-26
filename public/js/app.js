@@ -1905,10 +1905,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
           page: page_start
         }
       }).then(function (response) {
-        _this.renderProducts(response.data['products']);
-
-        _this.renderPages(response.data['pages']);
-
+        if (_this.renderProducts(response.data['products'])) _this.renderPages(response.data['pages']);
         _this.showLoadingBar = false;
       });
     },
@@ -1916,12 +1913,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       if (typeof products == 'string') // bad search
         {
           this.$refs['products'].innerHTML = '<div style="text-align: center; padding-top: 50px"><h2>' + products + '</h2></div>';
-          return;
+          return false;
         }
 
       for (var i = 0; i < products.length; i++) {
         this.$refs['products'].innerHTML += '<div class="product">' + '<div style="text-align: center">' + '<h3>' + products[i].name + '</h3>' + '</div>' + '<hr>' + '<div style="text-align: center">' + '<img src="' + products[i].img + '" width="200px" height="200px">' + '</div>' + '<b>' + 'Описание' + '</b>:' + '<div style="float:left; width: inherit - 8; word-wrap: break-word;">' + products[i].description + '</div><br><b>' + 'Автор' + '</b>:' + '<div style="float:right">' + products[i].author + '</div><br><b>' + 'Цена' + '</b>:' + '<div style="float:right;">' + products[i].price + '<b style="color: green">$</b></div>' + '<br><a href="' + products[i].conversation + '">Начать переписку...</a>' + '</div>';
       }
+
+      return true;
     },
     renderPages: function renderPages(pages_json) {
       for (var _i = 0, _Object$entries = Object.entries(pages_json); _i < _Object$entries.length; _i++) {
@@ -1935,7 +1934,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     getPageItemHtml: function getPageItemHtml(text, href) {
       return '<li class="page-item">' + '<a class="page-link" href="' + href + '">' + text + '</a>' + '</li>';
     },
-    clickSearch: function clickSearch(event) {
+    clickSearch: function clickSearch() {
       var _this2 = this;
 
       this.prepare_for_loading();
@@ -1965,6 +1964,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuejs_datepicker__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuejs-datepicker */ "./node_modules/vuejs-datepicker/dist/vuejs-datepicker.esm.js");
 /* harmony import */ var css_element_queries__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! css-element-queries */ "./node_modules/css-element-queries/index.js");
 /* harmony import */ var css_element_queries__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(css_element_queries__WEBPACK_IMPORTED_MODULE_3__);
+//
 //
 //
 //
@@ -71704,18 +71704,17 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    {
-      staticClass: "panel panel-default",
-      staticStyle: { "margin-top": "30px" }
-    },
+    { staticClass: "card", staticStyle: { "margin-top": "30px" } },
     [
-      _c("div", { staticClass: "panel-heading" }, [_vm._v("Статистика")]),
+      _c("div", { staticClass: "card-header" }, [_vm._v("Статистика")]),
+      _vm._v(" "),
+      _c("hr"),
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "panel-body", attrs: { id: "panel-chart" } },
+        { staticClass: "card-body", attrs: { id: "panel-chart" } },
         [
-          _c("h3", [_vm._v("Посещаемость")]),
+          _c("h5", [_vm._v("Посещаемость")]),
           _vm._v(" "),
           _c("line-chart", {
             attrs: {
@@ -71723,45 +71722,48 @@ var render = function() {
               height: 100,
               options: { responsive: true }
             }
-          })
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "form-inline", staticStyle: { "text-align": "center" } },
-        [
-          _vm._v("\n        С даты:\n        "),
-          _c("datepicker", {
-            attrs: {
-              "disabled-dates": _vm.disabledDates,
-              value: _vm.date_from,
-              "bootstrap-styling": true,
-              format: "yyyy-MM-dd",
-              "wrapper-class": "form-group"
-            },
-            on: {
-              selected: function($event) {
-                return _vm.updateDateValue($event, "from")
-              }
-            }
           }),
-          _vm._v("\n        По дату:\n        "),
-          _c("datepicker", {
-            attrs: {
-              "disabled-dates": _vm.disabledDates,
-              value: _vm.date_to,
-              "bootstrap-styling": true,
-              format: "yyyy-MM-dd",
-              "wrapper-class": "form-group"
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "form-inline",
+              staticStyle: { "text-align": "center" }
             },
-            on: {
-              selected: function($event) {
-                return _vm.updateDateValue($event, "to")
-              }
-            }
-          })
+            [
+              _vm._v("\n                С даты:\n                "),
+              _c("datepicker", {
+                attrs: {
+                  "disabled-dates": _vm.disabledDates,
+                  value: _vm.date_from,
+                  "bootstrap-styling": true,
+                  format: "yyyy-MM-dd",
+                  "wrapper-class": "form-group"
+                },
+                on: {
+                  selected: function($event) {
+                    return _vm.updateDateValue($event, "from")
+                  }
+                }
+              }),
+              _vm._v("\n                По дату:\n                "),
+              _c("datepicker", {
+                attrs: {
+                  "disabled-dates": _vm.disabledDates,
+                  value: _vm.date_to,
+                  "bootstrap-styling": true,
+                  format: "yyyy-MM-dd",
+                  "wrapper-class": "form-group"
+                },
+                on: {
+                  selected: function($event) {
+                    return _vm.updateDateValue($event, "to")
+                  }
+                }
+              })
+            ],
+            1
+          )
         ],
         1
       )
@@ -86725,8 +86727,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\OpSe\domains\pr_PDO\www\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\OpSe\domains\pr_PDO\www\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\OpSe\domains\pr_PDO\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\OpSe\domains\pr_PDO\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

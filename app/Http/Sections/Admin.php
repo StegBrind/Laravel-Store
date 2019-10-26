@@ -54,7 +54,7 @@ class Admin extends Section implements Initializable
     {
         $display = AdminDisplay::
         datatables()->
-        setHtmlAttribute('class', 'table table-condensed table-hover table-bordered')->
+        setHtmlAttribute('class', 'table-bordered')->
         setColumns
         (
             [

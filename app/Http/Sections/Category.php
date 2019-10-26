@@ -56,7 +56,7 @@ class Category extends Section implements Initializable
     public function onDisplay()
     {
         $display = AdminDisplay::datatables()->
-        setHtmlAttribute('class', 'table table-condensed table-hover')->
+        setHtmlAttribute('class', 'table-bordered')->
         setColumns
         (
             [
@@ -68,13 +68,13 @@ class Category extends Section implements Initializable
                 (
                     AdminColumn::control('')->addButton
                     (
-                        new ControlLink
+                        (new ControlLink
                         (
                             function (Model $category)
                             {
                                 return url('admin/products?category_id=' . $category->id);
                             }, 'Список товаров'
-                        )
+                        ))->setHtmlAttribute('class', 'btn-info')
                     )
                 )->setDeletable(false)->setEditable(false)
             ]

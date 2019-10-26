@@ -10,8 +10,8 @@
     </h4>
 </div>
 
-<div class="form-elements">
-    <div>
+<div class="card">
+    <div class="card-body">
         <div class="form-elements">
             <div class="form-group form-element-text">
                 <label for="subject" class="control-label">
@@ -36,7 +36,7 @@
 
 @push('footer-scripts')
     <script>
-        var editor;
+        let editor;
         CKEDITOR.on('instanceReady', function(ev)
         {
             editor = ev.editor;

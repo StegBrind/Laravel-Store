@@ -21,8 +21,9 @@ return [
     |
     */
 
-    'logo'      => '<span class="pull-left">Админ Меню</span>',
-    'logo_mini' => '<span class="glyphicon glyphicon-user"></span>',
+    'logo'      => '',
+    'logo_mini' => '<span class="fas fa-user-tie"></span>',
+    'menu_top' => 'Админ Меню',
 
     /*
     |--------------------------------------------------------------------------

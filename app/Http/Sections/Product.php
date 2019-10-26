@@ -54,14 +54,14 @@ class Product extends Section
         ]);
 
         return AdminDisplay::datatables()->
-        setHtmlAttribute('class', 'table table-hover table-bordered')->
+        setHtmlAttribute('class', 'table-bordered')->
         setColumns
         (
             [
-                AdminColumn::text('id', 'id'),
-                AdminColumn::text('name', 'Название'),
-                AdminColumn::text('description', 'Описание'),
-                AdminColumn::text('author', 'Автор'),
+                AdminColumn::text('id', 'id')->setHtmlAttribute('style', 'text-align: center')->setWidth(80),
+                AdminColumn::text('name', 'Название')->setHtmlAttribute('style', 'text-align: center'),
+                AdminColumn::text('description', 'Описание')->setWidth(600),
+                AdminColumn::text('author', 'Автор')->setHtmlAttribute('style', 'text-align: center'),
 
             ]
         )->

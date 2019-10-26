@@ -56,8 +56,8 @@
                     }
                    })
                     .then(response => {
-                        this.renderProducts(response.data['products']);
-                        this.renderPages(response.data['pages']);
+                        if (this.renderProducts(response.data['products']))
+                            this.renderPages(response.data['pages']);
                         this.showLoadingBar = false;
                     });
             },
@@ -65,7 +65,7 @@
                 if (typeof products == 'string') // bad search
                 {
                     this.$refs['products'].innerHTML = '<div style="text-align: center; padding-top: 50px"><h2>' + products + '</h2></div>';
-                    return;
+                    return false;
                 }
                 for (let i = 0; i < products.length; i++)
                 {
@@ -85,6 +85,7 @@
                    '<br><a href="' + products[i].conversation + '">Начать переписку...</a>' +
                   '</div>';
                 }
+                return true;
             },
             renderPages: function (pages_json) {
                 for (const [page_text, href] of Object.entries(pages_json))
@@ -100,7 +101,7 @@
                             '<a class="page-link" href="' + href + '">' + text + '</a>' +
                         '</li>';
             },
-            clickSearch: function (event) {
+            clickSearch: function () {
                 this.prepare_for_loading();
                 this.fetch_products(this.$refs['live_search'].value);
                 this.$refs['searchButton'].style.pointerEvents = 'none';
