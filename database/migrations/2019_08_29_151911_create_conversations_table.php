@@ -18,7 +18,7 @@ class CreateConversationsTable extends Migration
             Schema::create('conversations', function (Blueprint $table)
             {
                 $table->string('user_ids', 100)->unique();
-                $table->mediumText('messages');
+                $table->json('messages');
                 $table->string('token', 50);
                 $table->timestamps();
             });

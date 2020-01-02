@@ -2,17 +2,11 @@
 
 namespace App\Http\Sections;
 
-use Illuminate\Database\Eloquent\Model;
 use SleepingOwl\Admin\Contracts\Display\DisplayInterface;
 use SleepingOwl\Admin\Contracts\Form\FormInterface;
 use SleepingOwl\Admin\Contracts\Initializable;
-use SleepingOwl\Admin\Display\ControlLink;
-use SleepingOwl\Admin\Form\Buttons\FormButton;
-use SleepingOwl\Admin\Form\Buttons\SaveAndClose;
-use SleepingOwl\Admin\Form\FormPanel;
 use SleepingOwl\Admin\Section;
 use AdminDisplay;
-use AdminColumn;
 use AdminForm;
 use AdminFormElement;
 
@@ -55,33 +49,22 @@ class Category extends Section implements Initializable
      */
     public function onDisplay()
     {
-        $display = AdminDisplay::datatables()->
-        setHtmlAttribute('class', 'table-bordered')->
-        setColumns
-        (
-            [
-                AdminColumn::text('id', 'id'),
-                AdminColumn::text('name', 'Название'),
-                AdminColumn::text('count_products', 'Количество Продуктов'),
-                AdminColumn::datetime('created_at', 'Создано')->setFormat('d.m.Y'),
-                AdminColumn::datetime('updated_at', 'Изменено')->setFormat('d.m.Y'),
-                (
-                    AdminColumn::control('')->addButton
-                    (
-                        (new ControlLink
-                        (
-                            function (Model $category)
-                            {
-                                return url('admin/products?category_id=' . $category->id);
-                            }, 'Список товаров'
-                        ))->setHtmlAttribute('class', 'btn-info')
-                    )
-                )->setDeletable(false)->setEditable(false)
-            ]
-        )->
+        return AdminDisplay::tree()->
+        setParentField('parent_id')->
         setNewEntryButtonText('Добавить категорию')->
-        paginate(20);
-        return $display;
+        setOrderField('id')->
+        setValue(function (\App\Category $category)
+        {
+            $row_text = '<div style="width: 100%">' . $category->name . ' (' . $category->count_products . ')';
+            if ($category->count_products != 0)
+            {
+                $row_text .= ' <a style="float: right" class="btn btn-info btn-xs" href="' . url('admin/products?category_id=' . $category->id) . '">Посмотреть товары</a>';
+            }
+            $row_text .= '</div>';
+            return $row_text;
+        })->
+        setReorderable(false)->
+        setCardClass('border-info');
     }
 
     /**
@@ -92,8 +75,7 @@ class Category extends Section implements Initializable
 
     public function onEdit($id)
     {
-
-        return AdminForm::panel()->addBody
+        return AdminForm::card()->addBody
         (
             AdminFormElement::text('name', 'Название категории')
         );
@@ -104,12 +86,24 @@ class Category extends Section implements Initializable
      */
     public function onCreate()
     {
-        return AdminForm::panel()->addBody
+        $categories = \App\Category::query()->select(['id', 'name'])->where('count_products', '=', '0')->get()->toArray();
+
+        foreach ($categories as $index => $category)
+        {
+            unset($categories[$index]);
+            $categories[$category['id']] = $category['name'];
+        }
+
+        $categories[-1] = 'Корень';
+
+        return AdminForm::card()->addBody
         (
             [
-                AdminFormElement::text('name', 'Название категории')
+                AdminFormElement::text('name', 'Название категории')->setValidationRules('required'),
+                AdminFormElement::select('parent_id','Место добавления', $categories)->setDefaultValue('-1')->setValidationRules('required')
             ]
-        )->setAction(route('admin.category.new'));
+        )->
+        setAction(route('admin.category.new'));
     }
 
     /**
@@ -125,6 +119,6 @@ class Category extends Section implements Initializable
      */
     public function initialize()
     {
-        $this->addToNavigation(5);
+        $this->addToNavigation(3);
     }
 }

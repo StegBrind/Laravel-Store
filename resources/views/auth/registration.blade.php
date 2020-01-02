@@ -3,7 +3,7 @@
 @section('title')
     <title>Регистрация</title>
 @endsection
-
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 @section('content')
     <center><h1><br><p>Регистрация</p></h1></center><hr>
     <center>
@@ -72,7 +72,13 @@
                 @enderror
             </div>
             <div class="form-group row">
-                <div class="offset-sm-3">
+                <div class="g-recaptcha" data-sitekey="6Ldwz7EUAAAAAP6A1qlHfaoMTTtFwEWeR_Zp-OVo"></div>
+            </div>
+            @error('g-recaptcha-response')
+                <label class="label-danger" for="email" style="color: red">{{ $message }}</label>
+            @enderror
+            <div class="form-group row">
+                <div class="offset-3">
                     <button type="submit" class="btn btn-primary">{{ __('auth.sign_up2') }}</button>
                 </div>
             </div>

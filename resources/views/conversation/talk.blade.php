@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
 @section('title')
     <title>Переписка с {{ $companion_name }}</title>
 @endsection

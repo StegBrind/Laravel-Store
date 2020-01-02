@@ -6,11 +6,11 @@
                 <h5>Посещаемость</h5>
                 <line-chart :chart-data="data" :height="100" :options="{responsive: true}"></line-chart>
                 <div class="form-inline" style="text-align: center">
-                    С даты:
+                    <div style="margin: 5px">С даты:</div>
                     <datepicker :disabled-dates="disabledDates" :value="date_from" @selected="updateDateValue($event, 'from')"
                                 :bootstrap-styling="true" format="yyyy-MM-dd"
                                 wrapper-class="form-group"></datepicker>
-                    По дату:
+                    <div style="margin: 5px">По дату:</div>
                     <datepicker :disabled-dates="disabledDates" :value="date_to" @selected="updateDateValue($event, 'to')"
                                 :bootstrap-styling="true" format="yyyy-MM-dd"
                                 wrapper-class="form-group"></datepicker>

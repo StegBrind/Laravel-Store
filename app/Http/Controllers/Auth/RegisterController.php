@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Rules\ValidRecaptcha;
 use App\User;
+use App\Events\AdminNotificationEvent;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -57,7 +59,8 @@ class RegisterController extends Controller
             'surname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'login' => ['required', 'string', 'max:200', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed']
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            //'g-recaptcha-response' => ['required', new ValidRecaptcha]
         ]);
     }
 
@@ -69,6 +72,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        event(new AdminNotificationEvent("Новый пользователь зарегистрирован - {$data['name']} {$data['surname']}"));
         return User::create([
             'name_surname' => $data['name'] . ' ' . $data['surname'],
             'email' => $data['email'],
@@ -76,5 +80,6 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'conversation_list' => ''
         ]);
+        
     }
 }

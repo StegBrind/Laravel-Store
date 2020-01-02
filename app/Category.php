@@ -20,7 +20,7 @@ class Category extends Model
      */
     protected $fillable =
     [
-        'name', 'count_products'
+        'name', 'count_products', 'parent_id'
     ];
 
     /**
@@ -29,7 +29,6 @@ class Category extends Model
     static public function boot()
     {
         parent::boot();
-
         self::deleting(function ($model)
         {
             Product::query()->where('category_id', '=', $model->id)->delete();

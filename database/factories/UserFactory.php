@@ -22,7 +22,6 @@ $factory->define(User::class, function (Faker $faker) {
         'name_surname' => $faker->firstName . ' ' . $faker->lastName,
         'email' => $faker->unique()->safeEmail,
         'login' => $faker->unique()->text(40),
-        'password' => \Illuminate\Support\Facades\Hash::make('somepass'),
-	'conversation_list' => ''
+        'password' => \Illuminate\Support\Facades\Hash::make('somepass')
     ];
 });

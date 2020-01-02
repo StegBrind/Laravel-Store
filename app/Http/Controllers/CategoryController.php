@@ -30,11 +30,13 @@ class CategoryController extends Controller
     {
         $request->validate(
         [
-            'name' => 'required|unique:category'
+            'name' => 'required|unique:category',
+            'parent_id' => 'required'
         ]);
         Category::query()->create(
         [
-            'name' => $request->name
+            'name' => $request->name,
+            'parent_id' => $request->parent_id == -1 ? null : $request->parent_id
         ]);
         return redirect('admin/categories');
     }

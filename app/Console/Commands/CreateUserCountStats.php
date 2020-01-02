@@ -32,12 +32,13 @@ class CreateUserCountStats extends Command
     }
 
     /**
-     * Execute the console command.
-     *
-     * @return mixed
+     * Execute the console command
      */
     public function handle()
     {
         DB::table('stats')->insert(['date' => date('Y-m-d')]);
+
+        \Sheets::spreadsheet('1WwgxOzrjb8X53LgH30yfVYTJqQCJWvb9bhiuHNoxq1c')->sheet('Посещаймость')->range('')
+            ->append([[date('Y-m-d'), 0]]);
     }
 }

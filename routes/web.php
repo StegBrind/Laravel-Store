@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('admin', 'AdminController@get');
-Route::post('admin', 'AdminController@post');
+Route::post('image/upload', 'ImageController@upload');
+
+Route::get('admin', 'Admin\LoginController@get');
+Route::post('admin', 'Admin\LoginController@post');
 
 Route::group(['prefix' => 'registration'], function()
 {
@@ -34,8 +36,8 @@ Route::group(['prefix' => 'category'], function ()
 
 Route::group(['prefix' => 'conversation', 'middleware' => ['web', 'auth']], function ()
 {
-    Route::get('talk/{user_id}', 'ConversationController@talk')
-        ->middleware(['web', 'auth']);
+    Route::get('talk/{user_id}', 'ConversationController@talk');
+    Route::get('content/{user_ids}/{file_name}', 'ConversationController@getContent');
     Route::get('list', 'ConversationController@showList');
 });
 

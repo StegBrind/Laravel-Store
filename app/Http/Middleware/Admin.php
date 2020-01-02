@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use KodiCMS\Assets\Facades\Meta;
 
 class Admin
 {
@@ -15,6 +16,7 @@ class Admin
      */
     public function handle($request, Closure $next)
     {
+        Meta::removeJs('admin-default');
         return \App\Admin::tryLoginByCookies() ? $next($request) : redirect('admin');
     }
 }

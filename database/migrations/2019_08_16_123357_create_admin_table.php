@@ -20,6 +20,8 @@ class CreateAdminTable extends Migration
                 $table->string('email', 200)->unique();
                 $table->mediumText('password');
                 $table->text('name');
+                $table->json('notifications');
+                $table->integer('last_read_notification_id')->nullable();
                 $table->timestamp('created_at')->nullable();
                 $table->timestamp('updated_at')->nullable();
             });

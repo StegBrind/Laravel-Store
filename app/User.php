@@ -64,4 +64,13 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return substr($path, strrpos($path, '/') + 1);
     }
+
+    static public function boot()
+    {
+        parent::boot();
+        self::creating(function ($model)
+        {
+            $model->conversation_list = '[]';
+        });
+    }
 }

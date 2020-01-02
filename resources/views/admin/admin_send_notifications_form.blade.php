@@ -1,6 +1,6 @@
 @push('scripts')
-    <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
-    <script src="{{ asset('ckeditor/config.js') }}"></script>
+    <script src="{{ asset('packages/sleepingowl/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('packages/sleepingowl/ckeditor/config.js') }}"></script>
 @endpush
 
 <div style="text-align: center">

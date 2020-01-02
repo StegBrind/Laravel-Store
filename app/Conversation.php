@@ -42,10 +42,10 @@ class Conversation extends Model
                 [
                     'user_ids' => $conversation_num,
                     'token' => Str::random(50),
-                    'messages' => ''
+                    'messages' => '[]'
                 ]);
-            DB::update("UPDATE users SET conversation_list = CONCAT(conversation_list, '$conversation_num,') WHERE id = $user_id1");
-            DB::update("UPDATE users SET conversation_list = CONCAT(conversation_list, '$conversation_num,') WHERE id = $user_id2");
+            DB::update("UPDATE users SET conversation_list = JSON_ARRAY_APPEND(conversation_list, '$', \"$conversation_num\") WHERE id = $user_id1");
+            DB::update("UPDATE users SET conversation_list = JSON_ARRAY_APPEND(conversation_list, '$', \"$conversation_num\") WHERE id = $user_id2");
         }
         return $conversation_record;
     }

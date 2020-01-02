@@ -57,7 +57,7 @@ class AdminNotificationTabs extends Section implements Initializable
             [
                 AdminColumn::text('id', 'id'),
                 AdminColumn::text('subject', 'Тема'),
-                AdminColumn::text('content_message', 'Текст Сообщения'),
+                AdminColumn::text('content_message', 'Текст Сообщения')->setView(view('admin.custom.column_text')),
                 AdminColumn::boolean('done', 'Разослано'),
                 AdminColumn::datetime('created_at', 'Дата Отправки')
             ]

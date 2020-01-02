@@ -24,7 +24,7 @@ class Admin extends Model
      */
     protected $fillable =
     [
-        'name', 'email', 'password'
+        'name', 'email', 'password', 'notifications', 'last_read_notification_id'
     ];
 
     /**
@@ -36,6 +36,15 @@ class Admin extends Model
     [
         'password'
     ];
+
+    static public function boot()
+    {
+        parent::boot();
+        self::creating(function ($model)
+        {
+            $model->notifications = '[]';
+        });
+    }
 
     /**
      * @param $email
@@ -74,8 +83,9 @@ class Admin extends Model
      */
     static function saveAdminCredentials($email, $password)
     {
+        $admin_info = self::query()->select(['name', 'id'])->where('email', 'like', $email)->get()->toArray()[0];
         Cookie::queue('x-credentials', $email . '|' . $password . '|' .
-            self::query()->where('email', 'like', $email)->value('name'), 1440);
+            $admin_info['name'] . '|' . $admin_info['id'], 1440);
     }
 
     static function getAdminName()
@@ -91,5 +101,10 @@ class Admin extends Model
             $decrypted_credentials = explode('|', Cookie::get('x-credentials'));
         }
         return $decrypted_credentials[2];
+    }
+
+    static function id(): int
+    {
+        return explode('|', Cookie::get('x-credentials'))[3];
     }
 }

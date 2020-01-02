@@ -9,14 +9,8 @@ use AdminDisplay;
 use AdminColumn;
 use AdminForm;
 use AdminFormElement;
-use Illuminate\Database\Eloquent\Builder;
-use SleepingOwl\Admin\Contracts\Display\Extension\FilterInterface;
 use SleepingOwl\Admin\Contracts\Display\DisplayInterface;
 use SleepingOwl\Admin\Contracts\Initializable;
-use SleepingOwl\Admin\Display\DisplayTab;
-use SleepingOwl\Admin\Facades\Display;
-use SleepingOwl\Admin\Form\Buttons\Cancel;
-use SleepingOwl\Admin\Form\Buttons\Save;
 use SleepingOwl\Admin\Section;
 
 
@@ -61,7 +55,7 @@ class Users extends Section implements Initializable
     public function onDisplay()
     {
         $display = AdminDisplay::
-        datatables()->
+        datatablesAsync()->
         setHtmlAttribute('class', 'table-bordered')->
         setColumns
         (
@@ -74,7 +68,9 @@ class Users extends Section implements Initializable
                 AdminColumn::datetime('created_at', 'Дата Регистрации')->setFormat('d.m.Y')
             ]
         )->
-        paginate(30);
+        paginate(30)->
+        setActionsForm(AdminFormElement::html('<a class="btn btn-outline-success" href="/admin/export?table=users">Экспорт</a>'));
+        $display->getActionsForm()->setPlacement('card.heading');
         $display->setColumnFilters
         (
             [
@@ -83,24 +79,28 @@ class Users extends Section implements Initializable
                 AdminColumnFilter::text()->setPlaceholder('Имя Фамилия')->setOperator('contains'),
                 null,
                 AdminColumnFilter::range()
-                ->setFrom
-                (
-                    AdminColumnFilter::date()->setPlaceholder('Начиная с')->setPickerFormat('d.m.Y')->
-                    setFormat('Y-m-d')
-                )->setTo
-                (
-                    AdminColumnFilter::date()->setPlaceholder('Заканчивая')->setPickerFormat('d.m.Y')->
-                    setFormat('Y-m-d')
-                )
+                    ->setFrom
+                    (
+                        AdminColumnFilter::date()->setPlaceholder('Начиная с')->setPickerFormat('d.m.Y')->
+                        setFormat('Y-m-d')
+                    )->setTo
+                    (
+                        AdminColumnFilter::date()->setPlaceholder('Заканчивая')->setPickerFormat('d.m.Y')->
+                        setFormat('Y-m-d')
+                    )
             ]
         );
         return $display;
+//// Изменить разсположение положения кнопок на странице
+//        $table->getActions()
+//            ->setPlacement('panel.buttons')
+//            ->setHtmlAttribute('class', 'pull-right');
 
     }
 
     public function onEdit($id)
     {
-        return AdminForm::panel()->
+        return AdminForm::card()->
         addBody
         ([
             AdminFormElement::text('name_surname', 'Имя Фамилия')
@@ -126,4 +126,3 @@ class Users extends Section implements Initializable
         });
     }
 }
-
