@@ -18,7 +18,7 @@ module.exports = {
     },
     generateToken: function () {
         let token = '';
-        let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         for (let i = 0; i < 50; i++) token += characters.charAt(Math.floor(Math.random() * 62));
         return token;
     }
