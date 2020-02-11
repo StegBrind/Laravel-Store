@@ -19,6 +19,7 @@
 
 <script>
     import axios from "axios";
+
     export default {
         name: "ProductComponent",
         props: {
@@ -48,7 +49,7 @@
                 this.$refs['pages'].innerHTML = "";
             },
             fetch_products: function (query = '', page_start = 1) {
-                axios.get('live/search', {
+                axios.get('/api/category/live/search', {
                     params: {
                         query: query,
                         category_id: this.categoryId,
@@ -98,7 +99,7 @@
             },
             getPageItemHtml: function (text, href) {
                 return '<li class="page-item">' +
-                            '<a class="page-link" href="' + href + '">' + text + '</a>' +
+                            '<router-link class="page-link" to="' + href + '">' + text + '</router-link>' +
                         '</li>';
             },
             clickSearch: function () {

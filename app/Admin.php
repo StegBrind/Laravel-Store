@@ -27,16 +27,6 @@ class Admin extends Model
         'name', 'email', 'password', 'notifications', 'last_read_notification_id'
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden =
-    [
-        'password'
-    ];
-
     static public function boot()
     {
         parent::boot();
@@ -47,16 +37,23 @@ class Admin extends Model
     }
 
     /**
-     * @param $email
-     * @param $password
+     * @param string $email
+     * @param string $password
+     * @param bool $save_credentials
      * @return bool
      * Returns true if admin credentials are valid
      */
-    static function tryLogin($email, $password)
+    static function tryLogin(string $email, string $password, bool $save_credentials = false)
     {
-        $hashed_password = self::query()->where('email', 'like', $email)->value('password');
-        if ($hashed_password !== null && Hash::check($password, $hashed_password))
+        $credentials = self::query()->select(['password', 'id'])->where('email', 'like', $email)->get()->toArray()[0];
+        if ($credentials !== null && Hash::check($password, $credentials['password']))
+        {
+            if ($save_credentials)
+            {
+                self::saveAdminCredentials($credentials['id'], $credentials['password']);
+            }
             return true;
+        }
         return false;
     }
     /**
@@ -67,31 +64,32 @@ class Admin extends Model
      */
     static function tryLoginByCookies()
     {
-        // x-credentials - admin Email and Password
+        // x-credentials - admin ID and Password
         if (Cookie::has('x-credentials'))
         {
             $x_credentials = explode('|', Cookie::get('x-credentials'));
-            return self::tryLogin($x_credentials[0], $x_credentials[1]);
+            return true;
+            //return self::tryLogin($x_credentials[0], $x_credentials[1]);
         }
         return false;
     }
 
     /**
-     * @param $email
+     * @param $id
      * @param $password
      * Saves admin credentials to cookies
      */
-    static function saveAdminCredentials($email, $password)
+    static function saveAdminCredentials($id, $password)
     {
-        $admin_info = self::query()->select(['name', 'id'])->where('email', 'like', $email)->get()->toArray()[0];
-        Cookie::queue('x-credentials', $email . '|' . $password . '|' .
-            $admin_info['name'] . '|' . $admin_info['id'], 1440);
+        $admin_info = self::query()->select(['name'])->where('id', '=', $id)->get()->toArray()[0];
+        Cookie::queue('x-credentials', $id . '|' . $password . '|' .
+            $admin_info['name'], 1440);
     }
 
     static function getAdminName()
     {
         if (!Cookie::has('x-credentials')) return redirect('admin');
-        $decrypted_credentials = "";
+        $decrypted_credentials = '';
         try
         {
             $decrypted_credentials = explode('|', Crypt::decrypt(Cookie::get('x-credentials'), false));
@@ -105,6 +103,7 @@ class Admin extends Model
 
     static function id(): int
     {
-        return explode('|', Cookie::get('x-credentials'))[3];
+        dd(explode('|', Cookie::get('x-credentials'))[0]);
+        return explode('|', Cookie::get('x-credentials'))[0];
     }
 }

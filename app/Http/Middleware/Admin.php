@@ -17,6 +17,6 @@ class Admin
     public function handle($request, Closure $next)
     {
         Meta::removeJs('admin-default');
-        return \App\Admin::tryLoginByCookies() ? $next($request) : redirect('admin');
+        return \App\Admin::tryLoginByCookies() ? $next($request) : redirect('admin/login');
     }
 }

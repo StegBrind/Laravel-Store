@@ -1,0 +1,129 @@
+<template>
+    <v-card :loading="dataLoading">
+        <v-card-title>Статистика</v-card-title>
+            <v-divider/>
+            <v-card-text id="panel-chart">
+                <h4>Посещаемость</h4>
+                <line-chart :chart-data="data" :height="100" :options="{responsive: true}"/>
+                <v-card-actions>
+                    <div style="margin-right: 10px">С даты: </div>
+                    <datepicker :disabled-dates="disabledDates" :value="date_from" @selected="updateDateValue($event, 'from')"
+                                format="yyyy-MM-dd" class="font-weight-bold"/>
+                    <div style="margin-right: 10px">По дату: </div>
+                    <datepicker :disabled-dates="disabledDates" :value="date_to" @selected="updateDateValue($event, 'to')"
+                                format="yyyy-MM-dd" class="font-weight-bold"/>
+                </v-card-actions>
+        </v-card-text>
+    </v-card>
+</template>
+
+<script>
+    import LineChart from "../../plugins/LineChart";
+    import axios from "axios";
+    import Datepicker from 'vuejs-datepicker';
+
+    export default {
+        components: {
+            LineChart,
+            Datepicker
+        },
+        data: function () {
+            return {
+                loadedLabels: [],
+                loadedData: [],
+                data: {
+                    labels: ['', ''],
+                    datasets: [
+                        {
+                            label: 'Количество пользователей',
+                            backgroundColor: '#0091ab',
+                            data: [0, 0]
+                        }
+                    ]
+                },
+                date_from: '',
+                date_to: '',
+                disabledDates: {},
+                dataLoading: true
+            }
+        },
+        mounted() {
+            this.updateChart();
+        },
+        methods: {
+            updateChart: function () {
+                if (this.loadedLabels.length == 0)
+                {
+                    axios.get('get/stats').then(response => {
+                        for (let i = 0; i < response.data.length; i++)
+                        {
+                            this.loadedLabels[i] = response.data[i].date;
+                            this.loadedData[i] = response.data[i].users_count;
+                        }
+                        this.date_from = this.loadedLabels[0];
+                        this.date_to = this.loadedLabels[this.loadedLabels.length - 1];
+                        this.disabledDates = {
+                            to: this.toDate(this.date_from),
+                            from: this.toDate(this.date_to, true)
+                        };
+                        this.renderChart(this.loadedLabels, this.loadedData);
+                        this.dataLoading = false;
+                    });
+                }
+                else
+                {
+                    let _from = this.findIndex(this.date_from, this.loadedLabels);
+                    let to = this.findIndex(this.date_to, this.loadedLabels) + 1;
+                    if (_from > to - 1)
+                    {
+                        to += _from;
+                        _from = to - _from;
+                        to -= _from;
+                        if (_from != 0) --_from;
+                        if (to != this.loadedLabels.length) ++to;
+                    }
+                    let selectedLabels = this.loadedLabels.slice(_from, to);
+                    let selectedData = this.loadedData.slice(_from, to);
+                    if (selectedLabels.length == 1)
+                    {
+                        selectedLabels.push(selectedLabels[0]);
+                        selectedData.push(selectedData[0]);
+                    }
+                    this.renderChart(selectedLabels, selectedData);
+                }
+            },
+            renderChart: function (labels, data) {
+                this.data = {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Количество пользователей',
+                            backgroundColor: '#0091ab',
+                            data: data
+                        }
+                    ]
+                };
+            },
+            updateDateValue: function (selectedDate, who) {
+                if (who == 'from') this.date_from = this.formatDate(selectedDate);
+                else this.date_to = this.formatDate(selectedDate);
+                this.updateChart();
+            },
+            formatDate: function (date) {
+                return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+            },
+            toDate: function (date_str, increaseByOne = false) {
+                let date_arr = date_str.split('-');
+                if (increaseByOne) ++date_arr[2];
+                return new Date(date_arr[0], date_arr[1] - 1, date_arr[2]);
+            },
+            findIndex: function(date, dates_array) {
+                for (let i = 0; i < dates_array.length; i++)
+                {
+                    if (dates_array[i] == date)
+                        return i;
+                }
+            }
+        }
+    }
+</script>

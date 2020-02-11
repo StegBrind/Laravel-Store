@@ -27,9 +27,8 @@ class LoginController extends Controller
         {
             return redirect('admin')->withInput()->withErrors($validator->errors());
         }
-        if (Admin::tryLogin($request->email, $request->password))
+        if (Admin::tryLogin($request->email, $request->password, true))
         {
-            Admin::saveAdminCredentials($request->email, $request->password);
             return redirect('admin/dashboard');
         }
         return redirect('admin')->withErrors('Неверный E-Mail или пароль.')->withInput();
